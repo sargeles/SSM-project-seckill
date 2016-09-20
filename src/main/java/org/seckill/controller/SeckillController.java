@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/seckill")
 public class SeckillController {
 	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	int i ;
 	
 	@Autowired
 	private SeckillService seckillService;
