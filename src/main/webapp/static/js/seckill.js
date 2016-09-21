@@ -65,7 +65,6 @@ var seckill={
                 console.error(result);
             }
         });
-        alert("start");
     },
     countdown:function(seckillId,nowTime,startTime,endTime){
         var seckillbox=$("#seckill-box");
