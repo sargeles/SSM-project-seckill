@@ -59,13 +59,16 @@ public class SeckillController {
 			method = RequestMethod.POST,
 			produces={"application/json;charset=UTF-8"})
 	@ResponseBody
-	public SeckillResult<Exposer> exposer(Integer seckillId){
+	public SeckillResult<Exposer> exposer(@PathVariable("seckillId") Integer seckillId){
 		SeckillResult<Exposer> result;
+		System.out.println(seckillService.toString());
 		try {
+			
 			Exposer exposer = seckillService.exportSeckillUrl(seckillId);
+			System.out.println(exposer);
 			result = new SeckillResult<Exposer>(true, exposer);
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			logger.error(e.getMessage()+"!!!",e);
 			result = new SeckillResult<Exposer>(false, e.getMessage());
 		}
 		return result;
@@ -101,9 +104,10 @@ public class SeckillController {
 	}
 	
 	@RequestMapping(value="/time/now",method = RequestMethod.GET)
+	@ResponseBody
 	public SeckillResult<Long> time(){
 		Date now = new Date();
-		return new SeckillResult<Long>(false,now.getTime());
+		return new SeckillResult<Long>(true,now.getTime());
 	}
 	
 }

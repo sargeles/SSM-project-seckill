@@ -1,19 +1,17 @@
-/**
- * Created by dello on 2016/7/6.
- */
+
 //存放主要交互逻辑JS代码
 //JavaScript模块化
 var seckill={
     //封装秒杀相关ajax的地址
     URL:{
         now:function(){
-            return '/seckill/time/now';
+            return '/seckill/seckill/time/now';
         },
         exposer:function(seckillId){
-            return '/seckill/'+seckillId+'/exposer';
+            return '/seckill/seckill/'+seckillId+'/exposer';
         },
         execution: function (seckillId,md5) {
-            return '/seckill/'+seckillId+'/'+md5+'/execution';
+            return '/seckill/seckill/'+seckillId+'/'+md5+'/execution';
         }
     },
     validatePhone:function(phone) {
@@ -70,24 +68,24 @@ var seckill={
         alert("start");
     },
     countdown:function(seckillId,nowTime,startTime,endTime){
-        var seckiillbox=$("#seckill-box");
+        var seckillbox=$("#seckill-box");
         if(nowTime>=endTime){
             //秒杀结束
-            seckiillbox.html("秒杀结束")
+            seckillbox.html("秒杀结束")
         }else if(nowTime<startTime){
 
             var killTime=new Date(startTime+1000);
-            seckiillbox.countdown(killTime,function(event){
+            seckillbox.countdown(killTime,function(event){
                 var format=event.strftime("秒杀倒计时：%D天 %H时 %M分 %S秒");
-                seckiillbox.html(format);
+                seckillbox.html(format);
             }).on("finsih.countdown",function(){
                 //时间完成后的回掉函数
                 //获取秒杀地址控制显示逻辑，执行秒杀操作
-                seckill.handlerSeckill(seckillId,seckiillbox);
+                seckill.handlerSeckill(seckillId,seckillbox);
             });
         }else{
             //秒杀开始
-            seckill.handlerSeckill(seckillId,seckiillbox);
+            seckill.handlerSeckill(seckillId,seckillbox);
         }
     },
     //详情秒杀逻辑
@@ -98,10 +96,10 @@ var seckill={
             //计时交互
             //在Coookie中查找手机号
 
-            var killPhone= $.cookie("killphone");
-            var startTime=params.startTime;
-            var endTime=params.endTime;
-            var seckillId=params.seckillId;
+            var killPhone= $.cookie("userPhone");
+            var startTime=params['startTime'];
+            var endTime=params['endTime'];
+            var seckillId=params['seckillId'];
 
             //验证手机号
             if(seckill.validatePhone(killPhone)){
@@ -118,7 +116,7 @@ var seckill={
             $("#killPhoneBtn").click(function(){
                 var inputPhone=$("#killPhoneKey").val();
                 if(seckill.validatePhone(inputPhone)){
-                    $.cookie("killphone",inputPhone,{expires:7,path:'/seckill'});//expires 7天 path 路径
+                    $.cookie("userPhone",inputPhone,{expires:7,path:'/seckill/seckill'});//expires 7天 path 路径
                     //刷新页面
                     window.location.reload();
                 }else {
@@ -131,7 +129,7 @@ var seckill={
                 if(result&&result.success==true){
                     var nowTime=result['data'];
                     var nowDate=new Date(nowTime).getTime();
-                    //时间判断
+                    //时间判断,计时交互
                     seckill.countdown(seckillId,nowDate,startTime,endTime);
                 }else{
                     console.error(result);
